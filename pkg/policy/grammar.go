@@ -4,14 +4,14 @@ import (
 	"github.com/alecthomas/participle"
 )
 
-var parser *participle.Parser
+var partparser *participle.Parser
 
 func init() {
 	p, err := participle.Build(&query{})
 	if err != nil {
 		panic(err)
 	}
-	parser = p
+	partparser = p
 }
 
 type query struct {

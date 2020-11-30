@@ -1,5 +1,5 @@
 // Package policy provides facilities for creating policy from SQL-like language.
-//   eBNF grammar is provided in `grammar.ebnf` for illustration.
+//   eBNF grammar is provided in `grammar.g4` for illustration.
 //
 // Current limitations:
 // 1. Grouping filter expressions in parenthesis is not supported right now.

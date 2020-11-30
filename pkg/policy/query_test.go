@@ -21,7 +21,9 @@ func TestSimple(t *testing.T) {
 }
 
 func TestSimpleWithHRWB(t *testing.T) {
-	q := `REP 3 CBF 4`
+	q := `REP 1`
+	parseAntlr(q)
+	return
 	expected := new(netmap.PlacementPolicy)
 	expected.SetFilters([]*netmap.Filter{})
 	expected.SetSelectors([]*netmap.Selector{})
@@ -36,6 +38,7 @@ func TestSimpleWithHRWB(t *testing.T) {
 func TestFromSelect(t *testing.T) {
 	q := `REP 1 IN SPB
 SELECT 1 IN City FROM * AS SPB`
+
 	expected := new(netmap.PlacementPolicy)
 	expected.SetFilters([]*netmap.Filter{})
 	expected.SetSelectors([]*netmap.Selector{
