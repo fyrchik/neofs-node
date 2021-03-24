@@ -40,28 +40,28 @@ var (
 
 // primaryBucketName returns <CID>.
 func primaryBucketName(cid *container.ID) []byte {
-	return []byte(cid.String())
+	return []byte(getCID(cid))
 }
 
 // tombstoneBucketName returns <CID>_TS.
 func tombstoneBucketName(cid *container.ID) []byte {
-	return []byte(cid.String() + tombstonePostfix)
+	return []byte(getCID(cid) + tombstonePostfix)
 }
 
 // storageGroupBucketName returns <CID>_SG.
 func storageGroupBucketName(cid *container.ID) []byte {
-	return []byte(cid.String() + storageGroupPostfix)
+	return []byte(getCID(cid) + storageGroupPostfix)
 }
 
 // smallBucketName returns <CID>_small.
 func smallBucketName(cid *container.ID) []byte {
-	return []byte(cid.String() + smallPostfix) // consider caching output values
+	return []byte(getCID(cid) + smallPostfix) // consider caching output values
 }
 
 // attributeBucketName returns <CID>_attr_<attributeKey>.
 func attributeBucketName(cid *container.ID, attributeKey string) []byte {
 	sb := strings.Builder{} // consider getting string builders from sync.Pool
-	sb.WriteString(cid.String())
+	sb.WriteString(getCID(cid))
 	sb.WriteString(userAttributePostfix)
 	sb.WriteString(attributeKey)
 
@@ -80,32 +80,32 @@ func cidFromAttributeBucket(val []byte, attributeKey string) []byte {
 
 // payloadHashBucketName returns <CID>_payloadhash.
 func payloadHashBucketName(cid *container.ID) []byte {
-	return []byte(cid.String() + payloadHashPostfix)
+	return []byte(getCID(cid) + payloadHashPostfix)
 }
 
 // rootBucketName returns <CID>_root.
 func rootBucketName(cid *container.ID) []byte {
-	return []byte(cid.String() + rootPostfix)
+	return []byte(getCID(cid) + rootPostfix)
 }
 
 // ownerBucketName returns <CID>_ownerid.
 func ownerBucketName(cid *container.ID) []byte {
-	return []byte(cid.String() + ownerPostfix)
+	return []byte(getCID(cid) + ownerPostfix)
 }
 
 // parentBucketName returns <CID>_parent.
 func parentBucketName(cid *container.ID) []byte {
-	return []byte(cid.String() + parentPostfix)
+	return []byte(getCID(cid) + parentPostfix)
 }
 
 // splitBucketName returns <CID>_splitid.
 func splitBucketName(cid *container.ID) []byte {
-	return []byte(cid.String() + splitPostfix)
+	return []byte(getCID(cid) + splitPostfix)
 }
 
 // addressKey returns key for K-V tables when key is a whole address.
 func addressKey(addr *object.Address) []byte {
-	return []byte(addr.String())
+	return []byte(getCID(addr.ContainerID()) + "/" + getOID(addr.ObjectID()))
 }
 
 // parses object address formed by addressKey.
@@ -116,5 +116,5 @@ func addressFromKey(k []byte) (*object.Address, error) {
 
 // objectKey returns key for K-V tables when key is an object id.
 func objectKey(oid *object.ID) []byte {
-	return []byte(oid.String())
+	return []byte(getOID(oid))
 }

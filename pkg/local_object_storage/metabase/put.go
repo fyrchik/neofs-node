@@ -277,7 +277,7 @@ func listIndexes(obj *object.Object) ([]namedBucketItem, error) {
 // builds list of <fake bucket tree> indexes from the object.
 func fkbtIndexes(obj *object.Object) ([]namedBucketItem, error) {
 	addr := obj.Address()
-	objKey := []byte(addr.ObjectID().String())
+	objKey := []byte(getOID(addr.ObjectID()))
 
 	attrs := obj.Attributes()
 	result := make([]namedBucketItem, 0, 1+len(attrs))
