@@ -8,6 +8,7 @@ import (
 	objectSDK "github.com/nspcc-dev/neofs-api-go/pkg/object"
 	"github.com/nspcc-dev/neofs-node/pkg/core/object"
 	"github.com/nspcc-dev/neofs-node/pkg/local_object_storage/blobovnicza"
+	"github.com/nspcc-dev/neofs-node/pkg/metrics"
 	"go.etcd.io/bbolt"
 )
 
@@ -68,6 +69,8 @@ func (db *DB) Put(prm *PutPrm) (res *PutRes, err error) {
 	err = db.boltDB.Update(func(tx *bbolt.Tx) error {
 		return db.put(tx, prm.obj, prm.id, nil)
 	})
+
+	metrics.UpdateMetabaseDBStats(db.boltDB.Stats())
 
 	return
 }
