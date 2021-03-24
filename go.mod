@@ -42,4 +42,4 @@ require (
 // Used for debug reasons
 // replace github.com/nspcc-dev/neofs-api-go => ../neofs-api-go
 
-replace github.com/nspcc-dev/neofs-api-go => github.com/fyrchik/neofs-api-go 8c4a79cec202b632c768a7c32a1b967525540799
+replace github.com/nspcc-dev/neofs-api-go => github.com/fyrchik/neofs-api-go v1.3.1-0.20210324133537-fb365e9424ae

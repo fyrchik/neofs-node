@@ -111,7 +111,7 @@ func requestOwner(req metaWithToken) (*owner.ID, *ecdsa.PublicKey, error) {
 		return nil, nil, errors.Wrap(ErrMalformedRequest, "nil at body signature")
 	}
 
-	key := crypto.UnmarshalPublicKey(bodySignature.Key())
+	key := keycache.UnmarshalPublicKey(bodySignature.Key())
 	neo3wallet, err := owner.NEO3WalletFromPublicKey(key)
 	if err != nil {
 		return nil, nil, errors.Wrap(err, "can't create neo3 wallet")

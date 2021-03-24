@@ -109,6 +109,8 @@ github.com/flynn-archive/go-shlex v0.0.0-20150515145356-3f9db97f8568/go.mod h1:r
 github.com/frankban/quicktest v1.10.0/go.mod h1:ui7WezCLWMWxVWr1GETZY3smRy0G4KWq9vcPtJmFl7Y=
 github.com/fsnotify/fsnotify v1.4.7 h1:IXs+QLmnXW2CcXuY+8Mzv/fWEsPGWxqefPtCP5CnV9I=
 github.com/fsnotify/fsnotify v1.4.7/go.mod h1:jwhsz4b93w/PPRr/qN1Yymfu8t87LnFCMoQvtojpjFo=
+github.com/fyrchik/neofs-api-go v1.3.1-0.20210324133537-fb365e9424ae h1:UB+rL3cPQ4G15VN32lhHTTvmK17gdq49oM+69G4Vapg=
+github.com/fyrchik/neofs-api-go v1.3.1-0.20210324133537-fb365e9424ae/go.mod h1:+77RDkGuPcr5Kq5G8Kiw0ZfaTI+IrICDz3VIqdkU7jc=
 github.com/ghodss/yaml v1.0.0/go.mod h1:4dBDuWmgqj2HViK6kFavaiC9ZROes6MMH2rRYeMEF04=
 github.com/go-gl/glfw v0.0.0-20190409004039-e6da0acd62b1/go.mod h1:vR7hzQXu2zJy9AVAgeJqvqgH9Q5CA+iKCZ2gyEVpxRU=
 github.com/go-kit/kit v0.8.0/go.mod h1:xBxKIO96dXMWWy0MnWVtmwkA9/13aqxPnvrjFYMA2as=
@@ -279,12 +281,8 @@ github.com/nspcc-dev/neo-go v0.73.1-pre.0.20200303142215-f5a1b928ce09/go.mod h1:
 github.com/nspcc-dev/neo-go v0.91.0/go.mod h1:G6HdOWvzQ6tlvFdvFSN/PgCzLPN/X/X4d5hTjFRUDcc=
 github.com/nspcc-dev/neo-go v0.94.0 h1:2eafoyEnueqEMGDZF06HZJQN0MHgYxFzlcre5YUOP1M=
 github.com/nspcc-dev/neo-go v0.94.0/go.mod h1:IrBT/UG3/Slhqgjge8r6zni5tNRsWmwwG9OnVdASheI=
-github.com/nspcc-dev/neofs-api-go v1.24.0/go.mod h1:G7dqincfdjBrAbL5nxVp82emF05fSVEqe59ICsoRDI8=
-github.com/nspcc-dev/neofs-api-go v1.25.0 h1:hw1TTi3/3wCBB3KN6cycuM8Sn/MFnapSQptBx8KgDIY=
-github.com/nspcc-dev/neofs-api-go v1.25.0/go.mod h1:G7dqincfdjBrAbL5nxVp82emF05fSVEqe59ICsoRDI8=
 github.com/nspcc-dev/neofs-crypto v0.2.0/go.mod h1:F/96fUzPM3wR+UGsPi3faVNmFlA9KAEAUQR7dMxZmNA=
 github.com/nspcc-dev/neofs-crypto v0.2.3/go.mod h1:8w16GEJbH6791ktVqHN9YRNH3s9BEEKYxGhlFnp0cDw=
-github.com/nspcc-dev/neofs-crypto v0.3.0/go.mod h1:8w16GEJbH6791ktVqHN9YRNH3s9BEEKYxGhlFnp0cDw=
 github.com/nspcc-dev/neofs-crypto v0.3.1-0.20210323101142-225b24f7f42d h1:K8Zg59PIyS8tu382ezos+RgKNt+4cf6ukH2QYpWmr54=
 github.com/nspcc-dev/neofs-crypto v0.3.1-0.20210323101142-225b24f7f42d/go.mod h1:v3sF93XF5rmWHGuUyvvcJPL/jw52KQyYdBK9XC8CNW0=
 github.com/nspcc-dev/rfc6979 v0.1.0/go.mod h1:exhIh1PdpDC5vQmyEsGvc4YDM/lyQp/452QxGq/UEso=
