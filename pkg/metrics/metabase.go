@@ -21,23 +21,36 @@ var (
 		Name:      "node_deref",
 		Help:      "nodeDeref",
 	})
-	rebalanceTime = prometheus.NewGauge(prometheus.GaugeOpts{
+	times = prometheus.NewGaugeVec(prometheus.GaugeOpts{
 		Namespace: namespace,
 		Subsystem: metabaseSubsystem,
-		Name:      "rebalance_time",
-		Help:      "rebalanceTime",
-	})
-	spillTime = prometheus.NewGauge(prometheus.GaugeOpts{
-		Namespace: namespace,
-		Subsystem: metabaseSubsystem,
-		Name:      "spill_time",
+		Name:      "time",
 		Help:      "spillTime",
-	})
-	writeTime = prometheus.NewGauge(prometheus.GaugeOpts{
+	}, []string{"time"})
+
+	freePageN = prometheus.NewGauge(prometheus.GaugeOpts{
 		Namespace: namespace,
 		Subsystem: metabaseSubsystem,
-		Name:      "write_time",
-		Help:      "writeTime",
+		Name:      "freePageN",
+		Help:      "freePageN",
+	})
+	pendingPageN = prometheus.NewGauge(prometheus.GaugeOpts{
+		Namespace: namespace,
+		Subsystem: metabaseSubsystem,
+		Name:      "pendingPageN",
+		Help:      "pendingPageN",
+	})
+	freeAlloc = prometheus.NewGauge(prometheus.GaugeOpts{
+		Namespace: namespace,
+		Subsystem: metabaseSubsystem,
+		Name:      "freeAlloc",
+		Help:      "freeAlloc",
+	})
+	freelistInuse = prometheus.NewGauge(prometheus.GaugeOpts{
+		Namespace: namespace,
+		Subsystem: metabaseSubsystem,
+		Name:      "freelistInuse",
+		Help:      "freelistInuse",
 	})
 )
 
@@ -45,16 +58,28 @@ func init() {
 	prometheus.MustRegister(
 		pageAlloc,
 		nodeDeref,
-		rebalanceTime,
-		spillTime,
-		writeTime,
+		times,
+		freePageN,
+		pendingPageN,
+		freeAlloc,
+		freelistInuse,
 	)
 }
 
 func UpdateMetabaseDBStats(s bbolt.Stats) {
 	pageAlloc.Set(float64(s.TxStats.PageAlloc))
 	nodeDeref.Set(float64(s.TxStats.NodeDeref))
-	rebalanceTime.Set(float64(s.TxStats.RebalanceTime))
-	spillTime.Set(float64(s.TxStats.SpillTime))
-	writeTime.Set(float64(s.TxStats.WriteTime))
+	freePageN.Set(float64(s.FreePageN))
+	pendingPageN.Set(float64(s.PendingPageN))
+	freeAlloc.Set(float64(s.FreeAlloc))
+	freelistInuse.Set(float64(s.FreelistInuse))
+	times.With(prometheus.Labels{
+		"time": "rebalance",
+	}).Set(float64(s.TxStats.RebalanceTime))
+	times.With(prometheus.Labels{
+		"time": "spill",
+	}).Set(float64(s.TxStats.SpillTime))
+	times.With(prometheus.Labels{
+		"time": "write",
+	}).Set(float64(s.TxStats.WriteTime))
 }
