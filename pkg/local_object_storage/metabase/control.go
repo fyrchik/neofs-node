@@ -23,6 +23,8 @@ func (db *DB) Open() error {
 		return fmt.Errorf("can't open boltDB database: %w", err)
 	}
 
+	db.boltDB.MaxBatchSize = 32
+
 	db.log.Debug("opened boltDB instance for Metabase")
 
 	return nil
