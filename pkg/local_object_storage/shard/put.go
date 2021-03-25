@@ -1,11 +1,10 @@
 package shard
 
 import (
-	"sync"
-
 	"github.com/nspcc-dev/neofs-node/pkg/core/object"
 	"github.com/nspcc-dev/neofs-node/pkg/local_object_storage/blobstor"
 	meta "github.com/nspcc-dev/neofs-node/pkg/local_object_storage/metabase"
+	"github.com/pkg/errors"
 )
 
 // PutPrm groups the parameters of Put operation.
@@ -50,29 +49,17 @@ func (s *Shard) Put(prm *PutPrm) (*PutRes, error) {
 		}
 	}
 
-	var wg sync.WaitGroup
-
 	// res == nil if there is no writeCache or writeCache.Put has been failed
 	if res == nil {
-		wg.Add(1)
-		go func() {
-			defer wg.Done()
-			res, err = s.blobStor.Put(putPrm)
-		}()
+		if res, err = s.blobStor.Put(putPrm); err != nil {
+			return nil, errors.Wrap(err, "could not put object to BLOB storage")
+		}
 	}
 
-	var errMeta error
-	wg.Add(1)
 	go func() {
-		defer wg.Done()
 		// put to metabase
-		errMeta = meta.Put(s.metaBase, prm.obj, res.BlobovniczaID())
+		meta.Put(s.metaBase, prm.obj, res.BlobovniczaID())
 	}()
 
-	wg.Wait()
-
-	if err != nil {
-		return nil, err
-	}
-	return nil, errMeta
+	return nil, nil
 }
