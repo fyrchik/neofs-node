@@ -622,6 +622,7 @@ func initShardOptions(c *cfg) {
 					Timeout:        100 * time.Millisecond,
 					NoFreelistSync: true,
 					FreelistType:   bbolt.FreelistMapType,
+					PageSize:       os.Getpagesize() * 4,
 				}),
 			),
 			shard.WithWriteCache(useCache),
