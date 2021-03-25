@@ -623,6 +623,8 @@ func initShardOptions(c *cfg) {
 					NoFreelistSync: true,
 					FreelistType:   bbolt.FreelistMapType,
 					PageSize:       os.Getpagesize() * 4,
+					NoGrowSync:     true,
+					NoSync:         true,
 				}),
 			),
 			shard.WithWriteCache(useCache),
