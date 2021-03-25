@@ -619,7 +619,9 @@ func initShardOptions(c *cfg) {
 				meta.WithPath(metaPath),
 				meta.WithPermissions(metaPerm),
 				meta.WithBoltDBOptions(&bbolt.Options{
-					Timeout: 100 * time.Millisecond,
+					Timeout:        100 * time.Millisecond,
+					NoFreelistSync: true,
+					FreelistType:   bbolt.FreelistMapType,
 				}),
 			),
 			shard.WithWriteCache(useCache),

@@ -31,25 +31,25 @@ var (
 	freePageN = prometheus.NewGauge(prometheus.GaugeOpts{
 		Namespace: namespace,
 		Subsystem: metabaseSubsystem,
-		Name:      "freePageN",
+		Name:      "free_page_n",
 		Help:      "freePageN",
 	})
 	pendingPageN = prometheus.NewGauge(prometheus.GaugeOpts{
 		Namespace: namespace,
 		Subsystem: metabaseSubsystem,
-		Name:      "pendingPageN",
+		Name:      "pending_page_n",
 		Help:      "pendingPageN",
 	})
 	freeAlloc = prometheus.NewGauge(prometheus.GaugeOpts{
 		Namespace: namespace,
 		Subsystem: metabaseSubsystem,
-		Name:      "freeAlloc",
+		Name:      "free_alloc",
 		Help:      "freeAlloc",
 	})
 	freelistInuse = prometheus.NewGauge(prometheus.GaugeOpts{
 		Namespace: namespace,
 		Subsystem: metabaseSubsystem,
-		Name:      "freelistInuse",
+		Name:      "freelist_inuse",
 		Help:      "freelistInuse",
 	})
 )
