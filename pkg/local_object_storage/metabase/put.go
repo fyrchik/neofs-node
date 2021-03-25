@@ -1,8 +1,10 @@
 package meta
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
+	"sort"
 	"syscall"
 
 	"github.com/nspcc-dev/neo-go/pkg/io"
@@ -126,6 +128,10 @@ func (db *DB) put(tx *bbolt.Tx, obj *object.Object, id *blobovnicza.ID, si *obje
 		return fmt.Errorf("can' build unique indexes: %w", err)
 	}
 
+	sort.Slice(uniqueIndexes, func(i, j int) bool {
+		return bytes.Compare(uniqueIndexes[i].key, uniqueIndexes[j].key) == -1
+	})
+
 	// put unique indexes
 	for i := range uniqueIndexes {
 		err = putUniqueIndexItem(tx, uniqueIndexes[i])
@@ -139,6 +145,10 @@ func (db *DB) put(tx *bbolt.Tx, obj *object.Object, id *blobovnicza.ID, si *obje
 	if err != nil {
 		return fmt.Errorf("can' build list indexes: %w", err)
 	}
+
+	sort.Slice(listIndexes, func(i, j int) bool {
+		return bytes.Compare(listIndexes[i].key, listIndexes[j].key) == -1
+	})
 
 	// put list indexes
 	for i := range listIndexes {
