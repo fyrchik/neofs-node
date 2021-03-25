@@ -4,6 +4,7 @@ import (
 	"context"
 	"flag"
 	"log"
+	"runtime"
 
 	"github.com/nspcc-dev/neofs-node/pkg/services/control"
 	"github.com/nspcc-dev/neofs-node/pkg/util/grace"
@@ -17,6 +18,7 @@ func fatalOnErr(err error) {
 }
 
 func main() {
+	runtime.SetBlockProfileRate(1)
 	configFile := flag.String("config", "", "path to config")
 	flag.Parse()
 
