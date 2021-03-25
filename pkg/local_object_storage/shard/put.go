@@ -56,10 +56,6 @@ func (s *Shard) Put(prm *PutPrm) (*PutRes, error) {
 		}
 	}
 
-	go func() {
-		// put to metabase
-		meta.Put(s.metaBase, prm.obj, res.BlobovniczaID())
-	}()
-
-	return nil, nil
+	// put to metabase
+	return nil, meta.Put(s.metaBase, prm.obj, res.BlobovniczaID())
 }
