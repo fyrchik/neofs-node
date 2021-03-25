@@ -3,6 +3,7 @@ package meta
 import (
 	"errors"
 	"fmt"
+	"syscall"
 
 	"github.com/nspcc-dev/neo-go/pkg/io"
 	objectSDK "github.com/nspcc-dev/neofs-api-go/pkg/object"
@@ -67,6 +68,7 @@ func Put(db *DB, obj *object.Object, id *blobovnicza.ID) error {
 // Big objects have nil blobovniczaID.
 func (db *DB) Put(prm *PutPrm) (res *PutRes, err error) {
 	err = db.boltDB.Update(func(tx *bbolt.Tx) error {
+		tx.WriteFlag = syscall.O_DIRECT
 		return db.put(tx, prm.obj, prm.id, nil)
 	})
 
