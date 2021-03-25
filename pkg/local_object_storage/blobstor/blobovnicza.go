@@ -794,10 +794,16 @@ func (b *blobovniczas) close() error {
 //
 // If blobovnicza is already opened and cached, instance from cache is returned w/o changes.
 func (b *blobovniczas) openBlobovnicza(p string) (*blobovnicza.Blobovnicza, error) {
+	v, ok := b.opened.Get(p)
+	if ok {
+		// blobovnicza should be opened in cache
+		return v.(*blobovnicza.Blobovnicza), nil
+	}
+
 	b.openMtx.Lock()
 	defer b.openMtx.Unlock()
 
-	v, ok := b.opened.Get(p)
+	v, ok = b.opened.Get(p)
 	if ok {
 		// blobovnicza should be opened in cache
 		return v.(*blobovnicza.Blobovnicza), nil
