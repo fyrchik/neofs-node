@@ -146,11 +146,12 @@ func (b *blobovniczas) put(addr *objectSDK.Address, data []byte) (*blobovnicza.I
 
 			return false, nil
 		}
+		b.log.Info("active", zap.Uint64("index", active.ind))
 
 		if _, err := active.blz.Put(prm); err != nil {
 			// check if blobovnicza is full
 			if errors.Is(err, blobovnicza.ErrFull) {
-				b.log.Debug("blobovnicza overflowed",
+				b.log.Info("blobovnicza overflowed",
 					zap.String("path", path.Join(p, u64ToHexString(active.ind))),
 				)
 
@@ -689,11 +690,11 @@ func (b *blobovniczas) getActivated(p string) (blobovniczaWithIndex, error) {
 func (b *blobovniczas) updateActive(p string, old *uint64) error {
 	log := b.log.With(zap.String("path", p))
 
-	log.Debug("updating active blobovnicza...")
+	log.Info("updating active blobovnicza...")
 
 	_, err := b.updateAndGet(p, old)
 
-	log.Debug("active blobovnicza successfully updated")
+	log.Info("active blobovnicza successfully updated")
 
 	return err
 }

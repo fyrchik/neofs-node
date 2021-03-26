@@ -58,7 +58,6 @@ func (b *Blobovnicza) Put(prm *PutPrm) (*PutRes, error) {
 	}
 
 	if b.full() {
-		b.log.Info("blobovnicza is full")
 		return nil, ErrFull
 	}
 
