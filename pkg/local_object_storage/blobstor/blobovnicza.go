@@ -5,6 +5,7 @@ import (
 	"path"
 	"strconv"
 	"sync"
+	"sync/atomic"
 
 	lru "github.com/hashicorp/golang-lru"
 	"github.com/nspcc-dev/hrw"
@@ -138,12 +139,10 @@ func (b *blobovniczas) put(addr *objectSDK.Address, data []byte) (*blobovnicza.I
 	)
 
 	fn = func(p string) (bool, error) {
+		b.log.Info("blob path", zap.String("path", p))
 		active, err := b.getActivated(p)
 		if err != nil {
-			b.log.Debug("could not get active blobovnicza",
-				zap.String("error", err.Error()),
-			)
-
+			b.log.Debug("could not get active blobovnicza", zap.String("error", err.Error()))
 			return false, nil
 		}
 		b.log.Info("active", zap.Uint64("index", active.ind))
@@ -151,15 +150,12 @@ func (b *blobovniczas) put(addr *objectSDK.Address, data []byte) (*blobovnicza.I
 		if _, err := active.blz.Put(prm); err != nil {
 			// check if blobovnicza is full
 			if errors.Is(err, blobovnicza.ErrFull) {
-				b.log.Info("blobovnicza overflowed",
-					zap.String("path", path.Join(p, u64ToHexString(active.ind))),
-				)
+				b.log.Info("blobovnicza overflowed", zap.String("path", path.Join(p, u64ToHexString(active.ind))))
 
 				if err := b.updateActive(p, &active.ind); err != nil {
 					b.log.Debug("could not update active blobovnicza",
 						zap.String("level", p),
-						zap.String("error", err.Error()),
-					)
+						zap.String("error", err.Error()))
 
 					return false, nil
 				}
@@ -169,8 +165,7 @@ func (b *blobovniczas) put(addr *objectSDK.Address, data []byte) (*blobovnicza.I
 
 			b.log.Debug("could not put object to active blobovnicza",
 				zap.String("path", path.Join(p, u64ToHexString(active.ind))),
-				zap.String("error", err.Error()),
-			)
+				zap.String("error", err.Error()))
 
 			return false, nil
 		}
@@ -650,7 +645,7 @@ func (b *blobovniczas) iterateDeepest(addr *objectSDK.Address, f func(string) (b
 func (b *blobovniczas) iterateSorted(addr *objectSDK.Address, curPath []string, execDepth uint64, f func([]string) (bool, error)) (bool, error) {
 	indices := indexSlice(b.blzShallowWidth)
 
-	hrw.SortSliceByValue(indices, addressHash(addr, path.Join(curPath...)))
+	//hrw.SortSliceByValue(indices, addressHash(addr, path.Join(curPath...)))
 
 	exec := uint64(len(curPath)) == execDepth
 
@@ -711,7 +706,7 @@ func (b *blobovniczas) updateAndGet(p string, old *uint64) (blobovniczaWithIndex
 		if old != nil {
 			if active.ind == b.blzShallowWidth-1 {
 				return active, errors.New("no more blobovniczas")
-			} else if active.ind != *old {
+			} else if active.ind != atomic.LoadUint64(old) {
 				// sort of CAS in order to control concurrent
 				// updateActive calls
 				return active, nil
@@ -740,9 +735,8 @@ func (b *blobovniczas) updateAndGet(p string, old *uint64) (blobovniczaWithIndex
 	b.opened.Remove(p)
 	b.active[p] = active
 
-	b.log.Debug("blobovnicza succesfully activated",
-		zap.String("path", path.Join(p, u64ToHexString(active.ind))),
-	)
+	b.log.Info("blobovnicza succesfully activated",
+		zap.String("path", path.Join(p, u64ToHexString(active.ind))))
 
 	return active, nil
 }

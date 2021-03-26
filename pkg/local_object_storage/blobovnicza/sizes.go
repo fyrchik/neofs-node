@@ -49,7 +49,7 @@ func (b *Blobovnicza) decSize(sz uint64) {
 	b.filled.Sub(sz)
 }
 
-func (b *Blobovnicza) full() bool {
+func (b *Blobovnicza) Full() bool {
 	return b.filled.Load() >= b.fullSizeLimit
 }
 

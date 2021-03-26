@@ -25,7 +25,7 @@ type PutRes struct {
 
 // ErrFull is returned returned when trying to save an
 // object to a filled blobovnicza.
-var ErrFull = errors.New("blobovnicza is full")
+var ErrFull = errors.New("blobovnicza is Full")
 
 var errNilAddress = errors.New("object address is nil")
 
@@ -57,7 +57,7 @@ func (b *Blobovnicza) Put(prm *PutPrm) (*PutRes, error) {
 		return nil, errNilAddress
 	}
 
-	if b.full() {
+	if b.Full() {
 		return nil, ErrFull
 	}
 
