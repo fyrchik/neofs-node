@@ -70,5 +70,7 @@ func (b *Blobovnicza) Close() error {
 		zap.String("path", b.path),
 	)
 
+	close(b.closeCh)
+
 	return b.boltDB.Close()
 }

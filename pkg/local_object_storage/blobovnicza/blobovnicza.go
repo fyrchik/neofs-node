@@ -2,6 +2,7 @@ package blobovnicza
 
 import (
 	"os"
+	"sync"
 	"time"
 
 	"github.com/nspcc-dev/neofs-node/pkg/util/logger"
@@ -17,6 +18,16 @@ type Blobovnicza struct {
 	filled *atomic.Uint64
 
 	boltDB *bbolt.DB
+
+	cacheMtx sync.Mutex
+	cache    map[string][]keyValue
+	closeCh  chan struct{}
+}
+
+type keyValue struct {
+	key   []byte
+	value []byte
+	size  uint64
 }
 
 // Option is an option of Blobovnicza's constructor.
@@ -62,10 +73,14 @@ func New(opts ...Option) *Blobovnicza {
 		opts[i](c)
 	}
 
-	return &Blobovnicza{
-		cfg:    c,
-		filled: atomic.NewUint64(0),
+	b := &Blobovnicza{
+		cfg:     c,
+		filled:  atomic.NewUint64(0),
+		cache:   make(map[string][]keyValue),
+		closeCh: make(chan struct{}),
 	}
+	go b.batchLoop()
+	return b
 }
 
 // WithPath returns option to set system path to Blobovnicza.

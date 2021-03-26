@@ -1,9 +1,15 @@
 package blobovnicza
 
 import (
+	"bytes"
+	"fmt"
+	"sort"
+	"time"
+
 	objectSDK "github.com/nspcc-dev/neofs-api-go/pkg/object"
 	"github.com/pkg/errors"
 	"go.etcd.io/bbolt"
+	"go.uber.org/zap"
 )
 
 // PutPrm groups the parameters of Put operation.
@@ -51,35 +57,98 @@ func (b *Blobovnicza) Put(prm *PutPrm) (*PutRes, error) {
 		return nil, errNilAddress
 	}
 
+	if b.full() {
+		return nil, ErrFull
+	}
+
+	// calculate size
+	sz := uint64(len(prm.objData))
+	name := string(bucketForSize(sz))
+
+	b.cacheMtx.Lock()
+	old := b.cache[name]
+	old = append(old, keyValue{
+		key:   addressKey(addr),
+		value: prm.objData,
+		size:  sz,
+	})
+	b.cache[name] = old
+	b.cacheMtx.Unlock()
+
+	return nil, nil
+}
+
+const defaultPersistInterval = time.Second
+
+func (b *Blobovnicza) batchLoop() {
+	timer := time.NewTimer(defaultPersistInterval)
+	for {
+		select {
+		case <-timer.C:
+			if err := b.putBatch(); err != nil {
+				b.log.Error("error on batch put", zap.Error(err))
+			}
+			timer.Stop()
+			timer = time.NewTimer(defaultPersistInterval)
+		case <-b.closeCh:
+			timer.Stop()
+			return
+		}
+	}
+}
+
+func (b *Blobovnicza) putBatch() error {
+	b.cacheMtx.Lock()
+	cache := b.cache
+	b.cache = make(map[string][]keyValue)
+	b.cacheMtx.Unlock()
+
+	if len(cache) == 0 {
+		return nil
+	}
+
+	for _, kv := range cache {
+		sort.Slice(kv, func(i, j int) bool {
+			ret := bytes.Compare(kv[i].key, kv[j].key)
+			return ret == -1
+		})
+	}
+
+	var retErr error
+	sz := uint64(0)
+	count := 0
 	err := b.boltDB.Update(func(tx *bbolt.Tx) error {
-		if b.full() {
-			return ErrFull
+		for name, kv := range cache {
+			buck := tx.Bucket([]byte(name))
+			if buck == nil {
+				// TODO(fyrchik): panic here?
+				return fmt.Errorf("no bucket present: %x", name)
+			}
+
+			for i := range kv {
+				// TODO(fyrchik): no error is expected (see doc to `Put`).
+				err := buck.Put(kv[i].key, kv[i].value)
+				if err != nil && retErr == nil {
+					retErr = err
+				} else if err == nil {
+					sz += kv[i].size
+					count += 1
+				}
+			}
 		}
-
-		// calculate size
-		sz := uint64(len(prm.objData))
-
-		// get bucket for size
-		buck := tx.Bucket(bucketForSize(sz))
-		if buck == nil {
-			// expected to happen:
-			//  - before initialization step (incorrect usage by design)
-			//  - if DB is corrupted (in future this case should be handled)
-			return errors.Errorf("(%T) bucket for size %d not created", b, sz)
-		}
-
-		// save the object in bucket
-		if err := buck.Put(addressKey(addr), prm.objData); err != nil {
-			return errors.Wrapf(err, "(%T) could not save object in bucket", b)
-		}
-
-		// increase fullness counter
-		b.incSize(sz)
-
 		return nil
 	})
 
-	return nil, err
+	b.log.Debug("put batch in blobovnicza",
+		zap.String("path", b.path),
+		zap.Uint64("size", sz),
+		zap.Int("count", count))
+	b.incSize(sz)
+
+	if retErr == nil {
+		retErr = err
+	}
+	return retErr
 }
 
 func addressKey(addr *objectSDK.Address) []byte {
