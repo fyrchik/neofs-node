@@ -25,8 +25,8 @@ func (db *DB) Open() error {
 
 	db.boltDB.MaxBatchSize = 32
 
-	go db.batchLoop()
 	db.batch = db.newBatch()
+	go db.batchLoop()
 	db.log.Debug("opened boltDB instance for Metabase")
 
 	return nil
