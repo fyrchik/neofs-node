@@ -68,11 +68,9 @@ var errBreakBucketForEach = errors.New("bucket ForEach break")
 
 // Inhume marks objects as removed but not removes it from metabase.
 func (db *DB) Inhume(prm *InhumePrm) (res *InhumeRes, err error) {
-	err = db.boltDB.Update(func(tx *bbolt.Tx) error {
-		graveyard, err := tx.CreateBucketIfNotExists(graveyardBucketName)
-		if err != nil {
-			return err
-		}
+	err = db.boltDB.View(func(tx *bbolt.Tx) error {
+		return nil
+		graveyard := tx.Bucket(graveyardBucketName)
 
 		var tombKey []byte
 		if prm.tomb != nil {
@@ -101,6 +99,7 @@ func (db *DB) Inhume(prm *InhumePrm) (res *InhumeRes, err error) {
 			if err == nil && obj.Type() == objectSDK.TypeRegular {
 				err := changeContainerSize(
 					tx,
+					nil,
 					obj.ContainerID(),
 					obj.PayloadSize(),
 					false,

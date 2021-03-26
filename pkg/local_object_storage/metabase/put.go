@@ -3,7 +3,6 @@ package meta
 import (
 	"errors"
 	"fmt"
-	"syscall"
 
 	"github.com/nspcc-dev/neo-go/pkg/io"
 	objectSDK "github.com/nspcc-dev/neofs-api-go/pkg/object"
@@ -67,9 +66,10 @@ func Put(db *DB, obj *object.Object, id *blobovnicza.ID) error {
 // Put saves object header in metabase. Object payload expected to be cut.
 // Big objects have nil blobovniczaID.
 func (db *DB) Put(prm *PutPrm) (res *PutRes, err error) {
-	err = db.boltDB.Batch(func(tx *bbolt.Tx) error {
-		tx.WriteFlag = syscall.O_DIRECT
-		return db.put(tx, prm.obj, prm.id, nil)
+	err = db.boltDB.View(func(tx *bbolt.Tx) error {
+		bt := db.newBatch()
+		defer db.addBucket(bt)
+		return db.put(tx, bt, prm.obj, prm.id, nil)
 	})
 
 	metrics.UpdateMetabaseDBStats(db.boltDB.Stats())
@@ -77,7 +77,7 @@ func (db *DB) Put(prm *PutPrm) (res *PutRes, err error) {
 	return
 }
 
-func (db *DB) put(tx *bbolt.Tx, obj *object.Object, id *blobovnicza.ID, si *objectSDK.SplitInfo) error {
+func (db *DB) put(tx *bbolt.Tx, bt *Batch, obj *object.Object, id *blobovnicza.ID, si *objectSDK.SplitInfo) error {
 	isParent := si != nil
 
 	exists, err := db.exists(tx, obj.Address())
@@ -114,7 +114,7 @@ func (db *DB) put(tx *bbolt.Tx, obj *object.Object, id *blobovnicza.ID, si *obje
 			return err
 		}
 
-		err = db.put(tx, obj.GetParent(), id, parentSI)
+		err = db.put(tx, bt, obj.GetParent(), id, parentSI)
 		if err != nil {
 			return err
 		}
@@ -128,7 +128,7 @@ func (db *DB) put(tx *bbolt.Tx, obj *object.Object, id *blobovnicza.ID, si *obje
 
 	// put unique indexes
 	for i := range uniqueIndexes {
-		err = putUniqueIndexItem(tx, uniqueIndexes[i])
+		err = putUniqueIndexItem(bt, uniqueIndexes[i])
 		if err != nil {
 			return err
 		}
@@ -142,7 +142,7 @@ func (db *DB) put(tx *bbolt.Tx, obj *object.Object, id *blobovnicza.ID, si *obje
 
 	// put list indexes
 	for i := range listIndexes {
-		err = putListIndexItem(tx, listIndexes[i])
+		err = putListIndexItem(bt, listIndexes[i])
 		if err != nil {
 			return err
 		}
@@ -156,7 +156,7 @@ func (db *DB) put(tx *bbolt.Tx, obj *object.Object, id *blobovnicza.ID, si *obje
 
 	// put fake bucket tree indexes
 	for i := range fkbtIndexes {
-		err = putFKBTIndexItem(tx, fkbtIndexes[i])
+		err = putFKBTIndexItem(bt, fkbtIndexes[i])
 		if err != nil {
 			return err
 		}
@@ -166,6 +166,7 @@ func (db *DB) put(tx *bbolt.Tx, obj *object.Object, id *blobovnicza.ID, si *obje
 	if obj.Type() == objectSDK.TypeRegular && !isParent {
 		err = changeContainerSize(
 			tx,
+			bt,
 			obj.ContainerID(),
 			obj.PayloadSize(),
 			true,
@@ -306,43 +307,25 @@ func fkbtIndexes(obj *object.Object) ([]namedBucketItem, error) {
 	return result, nil
 }
 
-func putUniqueIndexItem(tx *bbolt.Tx, item namedBucketItem) error {
-	bkt, err := tx.CreateBucketIfNotExists(item.name)
-	if err != nil {
-		return fmt.Errorf("can't create index %v: %w", item.name, err)
-	}
-
+func putUniqueIndexItem(tx *Batch, item namedBucketItem) error {
+	bkt := tx.CreateBucketIfNotExists(item.name)
 	return bkt.Put(item.key, item.val)
 }
 
-func putFKBTIndexItem(tx *bbolt.Tx, item namedBucketItem) error {
-	bkt, err := tx.CreateBucketIfNotExists(item.name)
-	if err != nil {
-		return fmt.Errorf("can't create index %v: %w", item.name, err)
-	}
-
-	fkbtRoot, err := bkt.CreateBucketIfNotExists(item.key)
-	if err != nil {
-		return fmt.Errorf("can't create fake bucket tree index %v: %w", item.key, err)
-	}
-
+func putFKBTIndexItem(tx *Batch, item namedBucketItem) error {
+	bkt := tx.CreateBucketIfNotExists(item.name)
+	fkbtRoot := bkt.CreateBucketIfNotExists(item.key)
 	return fkbtRoot.Put(item.val, zeroValue)
 }
 
-func putListIndexItem(tx *bbolt.Tx, item namedBucketItem) error {
-	bkt, err := tx.CreateBucketIfNotExists(item.name)
-	if err != nil {
-		return fmt.Errorf("can't create index %v: %w", item.name, err)
-	}
-
+func putListIndexItem(tx *Batch, item namedBucketItem) error {
+	bkt := tx.CreateBucketIfNotExists(item.name)
 	//lst, err := decodeList(bkt.Get(item.key))
 	//if err != nil {
 	//	return fmt.Errorf("can't decode leaf list %v: %w", item.key, err)
 	//}
 
-	lst := [][]byte{item.val}
-
-	encodedLst, err := encodeList(lst)
+	encodedLst, err := encodeList([][]byte{item.val})
 	if err != nil {
 		return fmt.Errorf("can't encode leaf list %v: %w", item.key, err)
 	}

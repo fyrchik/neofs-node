@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 	"os"
 	"strconv"
+	"sync"
 
 	"github.com/nspcc-dev/neofs-api-go/pkg/object"
 	v2object "github.com/nspcc-dev/neofs-api-go/v2/object"
@@ -20,6 +21,9 @@ type DB struct {
 	matchers map[object.SearchMatchType]func(string, []byte, string) bool
 
 	boltDB *bbolt.DB
+
+	batchMtx sync.RWMutex
+	batch    *Batch
 }
 
 // Option is an option of DB constructor.

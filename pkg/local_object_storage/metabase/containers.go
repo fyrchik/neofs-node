@@ -38,7 +38,7 @@ func (db *DB) containers(tx *bbolt.Tx) ([]*container.ID, error) {
 }
 
 func (db *DB) ContainerSize(id *container.ID) (size uint64, err error) {
-	err = db.boltDB.Update(func(tx *bbolt.Tx) error {
+	err = db.boltDB.View(func(tx *bbolt.Tx) error {
 		size, err = db.containerSize(tx, id)
 
 		return err
@@ -48,9 +48,9 @@ func (db *DB) ContainerSize(id *container.ID) (size uint64, err error) {
 }
 
 func (db *DB) containerSize(tx *bbolt.Tx, id *container.ID) (uint64, error) {
-	containerVolume, err := tx.CreateBucketIfNotExists(containerVolumeBucketName)
-	if err != nil {
-		return 0, err
+	containerVolume := tx.Bucket(containerVolumeBucketName)
+	if containerVolume == nil {
+		return 0, nil
 	}
 
 	key := id.ToV2().GetValue()
@@ -78,14 +78,14 @@ func parseContainerSize(v []byte) uint64 {
 	return binary.LittleEndian.Uint64(v)
 }
 
-func changeContainerSize(tx *bbolt.Tx, id *container.ID, delta uint64, increase bool) error {
-	containerVolume, err := tx.CreateBucketIfNotExists(containerVolumeBucketName)
-	if err != nil {
-		return err
-	}
-
+func changeContainerSize(tx *bbolt.Tx, bt *Batch, id *container.ID, delta uint64, increase bool) error {
+	containerVolume := bt.CreateBucketIfNotExists(containerVolumeBucketName)
+	buk := tx.Bucket(containerVolumeBucketName)
 	key := id.ToV2().GetValue()
-	size := parseContainerSize(containerVolume.Get(key))
+	var size uint64
+	if buk != nil {
+		size = parseContainerSize(buk.Get(key))
+	}
 
 	if increase {
 		size += delta
