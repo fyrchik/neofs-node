@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 	"os"
 	"strconv"
+	"sync"
 
 	"github.com/nspcc-dev/neofs-api-go/pkg/object"
 	v2object "github.com/nspcc-dev/neofs-api-go/v2/object"
@@ -20,6 +21,10 @@ type DB struct {
 	matchers map[object.SearchMatchType]func(string, []byte, string) bool
 
 	boltDB *bbolt.DB
+
+	closeCh  chan struct{}
+	batchMtx sync.Mutex
+	putBatch []*PutPrm
 }
 
 // Option is an option of DB constructor.
@@ -51,14 +56,17 @@ func New(opts ...Option) *DB {
 		opts[i](c)
 	}
 
-	return &DB{
+	db := &DB{
 		cfg: c,
 		matchers: map[object.SearchMatchType]func(string, []byte, string) bool{
 			object.MatchUnknown:        unknownMatcher,
 			object.MatchStringEqual:    stringEqualMatcher,
 			object.MatchStringNotEqual: stringNotEqualMatcher,
 		},
+		closeCh: make(chan struct{}),
 	}
+	go db.batchLoop()
+	return db
 }
 
 func stringifyValue(key string, objVal []byte) string {

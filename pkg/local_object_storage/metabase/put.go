@@ -5,11 +5,13 @@ import (
 	"encoding/gob"
 	"errors"
 	"fmt"
+	"time"
 
 	objectSDK "github.com/nspcc-dev/neofs-api-go/pkg/object"
 	"github.com/nspcc-dev/neofs-node/pkg/core/object"
 	"github.com/nspcc-dev/neofs-node/pkg/local_object_storage/blobovnicza"
 	"go.etcd.io/bbolt"
+	"go.uber.org/zap"
 )
 
 type (
@@ -66,11 +68,38 @@ func Put(db *DB, obj *object.Object, id *blobovnicza.ID) error {
 // Put saves object header in metabase. Object payload expected to be cut.
 // Big objects have nil blobovniczaID.
 func (db *DB) Put(prm *PutPrm) (res *PutRes, err error) {
-	err = db.boltDB.Update(func(tx *bbolt.Tx) error {
-		return db.put(tx, prm.obj, prm.id, nil)
-	})
+	db.batchMtx.Lock()
+	defer db.batchMtx.Unlock()
+	db.putBatch = append(db.putBatch, prm)
 
 	return
+}
+
+const defaultPersistInterval = time.Second
+
+func (db *DB) batchLoop() {
+	timer := time.NewTimer(defaultPersistInterval)
+	for {
+		select {
+		case <-timer.C:
+			db.batchMtx.Lock()
+			b := db.putBatch
+			db.putBatch = nil
+			db.batchMtx.Unlock()
+			_ = db.boltDB.Update(func(tx *bbolt.Tx) error {
+				for i := range b {
+					if err := db.put(tx, b[i].obj, b[i].id, nil); err != nil {
+						db.log.Error("error on put", zap.Error(err))
+					}
+				}
+				return nil
+			})
+			timer.Stop()
+			timer = time.NewTimer(defaultPersistInterval)
+
+		case <-db.closeCh:
+		}
+	}
 }
 
 func (db *DB) put(tx *bbolt.Tx, obj *object.Object, id *blobovnicza.ID, si *objectSDK.SplitInfo) error {

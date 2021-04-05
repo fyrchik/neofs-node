@@ -38,5 +38,6 @@ func (db *DB) Init() error {
 
 // Close closes boltDB instance.
 func (db *DB) Close() error {
+	close(db.closeCh)
 	return db.boltDB.Close()
 }
