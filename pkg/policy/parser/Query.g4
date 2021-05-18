@@ -32,6 +32,7 @@ filterExpr
 	: F1=filterExpr Op='AND' F2=filterExpr
 	| F1=filterExpr Op='OR' F2=filterExpr
 	| expr
+	| '(' Inner=filterExpr ')'
 	;
 
 filterStmt

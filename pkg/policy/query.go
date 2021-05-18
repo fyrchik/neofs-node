@@ -124,6 +124,10 @@ func (p *policyVisitor) fillFilter(e *parser.FilterExprContext) *netmap.Filter {
 		return nil
 	}
 
+	if inner := e.GetInner(); inner != nil {
+		return p.fillFilter(inner.(*parser.FilterExprContext))
+	}
+
 	f := new(netmap.Filter)
 	if eCtx := e.Expr(); eCtx != nil {
 		if flt := eCtx.GetFilter(); flt != nil {

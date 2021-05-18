@@ -16,7 +16,7 @@ var _ = reflect.Copy
 var _ = strconv.Itoa
 
 var parserATN = []uint16{
-	3, 24715, 42794, 33075, 47597, 16764, 15335, 30598, 22884, 3, 26, 125,
+	3, 24715, 42794, 33075, 47597, 16764, 15335, 30598, 22884, 3, 28, 130,
 	4, 2, 9, 2, 4, 3, 9, 3, 4, 4, 9, 4, 4, 5, 9, 5, 4, 6, 9, 6, 4, 7, 9, 7,
 	4, 8, 9, 8, 4, 9, 9, 9, 4, 10, 9, 10, 4, 11, 9, 11, 4, 12, 9, 12, 4, 13,
 	9, 13, 4, 14, 9, 14, 4, 15, 9, 15, 3, 2, 3, 2, 7, 2, 33, 10, 2, 12, 2,
@@ -24,60 +24,62 @@ var parserATN = []uint16{
 	14, 2, 45, 11, 2, 3, 2, 7, 2, 48, 10, 2, 12, 2, 14, 2, 51, 11, 2, 3, 3,
 	3, 3, 3, 3, 3, 3, 5, 3, 57, 10, 3, 3, 4, 3, 4, 3, 4, 3, 5, 3, 5, 3, 5,
 	3, 5, 5, 5, 66, 10, 5, 3, 5, 5, 5, 69, 10, 5, 3, 5, 3, 5, 3, 5, 3, 5, 5,
-	5, 75, 10, 5, 3, 6, 3, 6, 3, 7, 3, 7, 3, 7, 3, 7, 3, 7, 3, 7, 3, 7, 3,
-	7, 3, 7, 7, 7, 88, 10, 7, 12, 7, 14, 7, 91, 11, 7, 3, 8, 3, 8, 3, 8, 3,
-	8, 3, 8, 3, 9, 3, 9, 3, 9, 3, 9, 3, 9, 3, 9, 5, 9, 104, 10, 9, 3, 10, 3,
-	10, 3, 11, 3, 11, 3, 11, 5, 11, 111, 10, 11, 3, 12, 3, 12, 3, 13, 3, 13,
-	3, 14, 3, 14, 5, 14, 119, 10, 14, 3, 15, 3, 15, 5, 15, 123, 10, 15, 3,
-	15, 2, 3, 12, 16, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 2,
-	6, 3, 2, 3, 4, 3, 2, 8, 13, 3, 2, 23, 24, 4, 2, 14, 16, 18, 20, 2, 125,
-	2, 30, 3, 2, 2, 2, 4, 52, 3, 2, 2, 2, 6, 58, 3, 2, 2, 2, 8, 61, 3, 2, 2,
-	2, 10, 76, 3, 2, 2, 2, 12, 78, 3, 2, 2, 2, 14, 92, 3, 2, 2, 2, 16, 103,
-	3, 2, 2, 2, 18, 105, 3, 2, 2, 2, 20, 110, 3, 2, 2, 2, 22, 112, 3, 2, 2,
-	2, 24, 114, 3, 2, 2, 2, 26, 118, 3, 2, 2, 2, 28, 122, 3, 2, 2, 2, 30, 34,
-	5, 4, 3, 2, 31, 33, 5, 4, 3, 2, 32, 31, 3, 2, 2, 2, 33, 36, 3, 2, 2, 2,
-	34, 32, 3, 2, 2, 2, 34, 35, 3, 2, 2, 2, 35, 38, 3, 2, 2, 2, 36, 34, 3,
-	2, 2, 2, 37, 39, 5, 6, 4, 2, 38, 37, 3, 2, 2, 2, 38, 39, 3, 2, 2, 2, 39,
-	43, 3, 2, 2, 2, 40, 42, 5, 8, 5, 2, 41, 40, 3, 2, 2, 2, 42, 45, 3, 2, 2,
-	2, 43, 41, 3, 2, 2, 2, 43, 44, 3, 2, 2, 2, 44, 49, 3, 2, 2, 2, 45, 43,
-	3, 2, 2, 2, 46, 48, 5, 14, 8, 2, 47, 46, 3, 2, 2, 2, 48, 51, 3, 2, 2, 2,
-	49, 47, 3, 2, 2, 2, 49, 50, 3, 2, 2, 2, 50, 3, 3, 2, 2, 2, 51, 49, 3, 2,
-	2, 2, 52, 53, 7, 14, 2, 2, 53, 56, 7, 23, 2, 2, 54, 55, 7, 15, 2, 2, 55,
-	57, 5, 26, 14, 2, 56, 54, 3, 2, 2, 2, 56, 57, 3, 2, 2, 2, 57, 5, 3, 2,
-	2, 2, 58, 59, 7, 17, 2, 2, 59, 60, 7, 23, 2, 2, 60, 7, 3, 2, 2, 2, 61,
-	62, 7, 18, 2, 2, 62, 68, 7, 23, 2, 2, 63, 65, 7, 15, 2, 2, 64, 66, 5, 10,
-	6, 2, 65, 64, 3, 2, 2, 2, 65, 66, 3, 2, 2, 2, 66, 67, 3, 2, 2, 2, 67, 69,
-	5, 26, 14, 2, 68, 63, 3, 2, 2, 2, 68, 69, 3, 2, 2, 2, 69, 70, 3, 2, 2,
-	2, 70, 71, 7, 19, 2, 2, 71, 74, 5, 28, 15, 2, 72, 73, 7, 16, 2, 2, 73,
-	75, 5, 26, 14, 2, 74, 72, 3, 2, 2, 2, 74, 75, 3, 2, 2, 2, 75, 9, 3, 2,
-	2, 2, 76, 77, 9, 2, 2, 2, 77, 11, 3, 2, 2, 2, 78, 79, 8, 7, 1, 2, 79, 80,
-	5, 16, 9, 2, 80, 89, 3, 2, 2, 2, 81, 82, 12, 5, 2, 2, 82, 83, 7, 5, 2,
-	2, 83, 88, 5, 12, 7, 6, 84, 85, 12, 4, 2, 2, 85, 86, 7, 6, 2, 2, 86, 88,
-	5, 12, 7, 5, 87, 81, 3, 2, 2, 2, 87, 84, 3, 2, 2, 2, 88, 91, 3, 2, 2, 2,
-	89, 87, 3, 2, 2, 2, 89, 90, 3, 2, 2, 2, 90, 13, 3, 2, 2, 2, 91, 89, 3,
-	2, 2, 2, 92, 93, 7, 20, 2, 2, 93, 94, 5, 12, 7, 2, 94, 95, 7, 16, 2, 2,
-	95, 96, 5, 26, 14, 2, 96, 15, 3, 2, 2, 2, 97, 98, 7, 7, 2, 2, 98, 104,
-	5, 26, 14, 2, 99, 100, 5, 26, 14, 2, 100, 101, 5, 18, 10, 2, 101, 102,
-	5, 20, 11, 2, 102, 104, 3, 2, 2, 2, 103, 97, 3, 2, 2, 2, 103, 99, 3, 2,
-	2, 2, 104, 17, 3, 2, 2, 2, 105, 106, 9, 3, 2, 2, 106, 19, 3, 2, 2, 2, 107,
-	111, 5, 26, 14, 2, 108, 111, 5, 22, 12, 2, 109, 111, 7, 25, 2, 2, 110,
-	107, 3, 2, 2, 2, 110, 108, 3, 2, 2, 2, 110, 109, 3, 2, 2, 2, 111, 21, 3,
-	2, 2, 2, 112, 113, 9, 4, 2, 2, 113, 23, 3, 2, 2, 2, 114, 115, 9, 5, 2,
-	2, 115, 25, 3, 2, 2, 2, 116, 119, 5, 24, 13, 2, 117, 119, 7, 22, 2, 2,
-	118, 116, 3, 2, 2, 2, 118, 117, 3, 2, 2, 2, 119, 27, 3, 2, 2, 2, 120, 123,
-	5, 26, 14, 2, 121, 123, 7, 21, 2, 2, 122, 120, 3, 2, 2, 2, 122, 121, 3,
-	2, 2, 2, 123, 29, 3, 2, 2, 2, 16, 34, 38, 43, 49, 56, 65, 68, 74, 87, 89,
-	103, 110, 118, 122,
+	5, 75, 10, 5, 3, 6, 3, 6, 3, 7, 3, 7, 3, 7, 3, 7, 3, 7, 3, 7, 5, 7, 85,
+	10, 7, 3, 7, 3, 7, 3, 7, 3, 7, 3, 7, 3, 7, 7, 7, 93, 10, 7, 12, 7, 14,
+	7, 96, 11, 7, 3, 8, 3, 8, 3, 8, 3, 8, 3, 8, 3, 9, 3, 9, 3, 9, 3, 9, 3,
+	9, 3, 9, 5, 9, 109, 10, 9, 3, 10, 3, 10, 3, 11, 3, 11, 3, 11, 5, 11, 116,
+	10, 11, 3, 12, 3, 12, 3, 13, 3, 13, 3, 14, 3, 14, 5, 14, 124, 10, 14, 3,
+	15, 3, 15, 5, 15, 128, 10, 15, 3, 15, 2, 3, 12, 16, 2, 4, 6, 8, 10, 12,
+	14, 16, 18, 20, 22, 24, 26, 28, 2, 6, 3, 2, 3, 4, 3, 2, 10, 15, 3, 2, 25,
+	26, 4, 2, 16, 18, 20, 22, 2, 131, 2, 30, 3, 2, 2, 2, 4, 52, 3, 2, 2, 2,
+	6, 58, 3, 2, 2, 2, 8, 61, 3, 2, 2, 2, 10, 76, 3, 2, 2, 2, 12, 84, 3, 2,
+	2, 2, 14, 97, 3, 2, 2, 2, 16, 108, 3, 2, 2, 2, 18, 110, 3, 2, 2, 2, 20,
+	115, 3, 2, 2, 2, 22, 117, 3, 2, 2, 2, 24, 119, 3, 2, 2, 2, 26, 123, 3,
+	2, 2, 2, 28, 127, 3, 2, 2, 2, 30, 34, 5, 4, 3, 2, 31, 33, 5, 4, 3, 2, 32,
+	31, 3, 2, 2, 2, 33, 36, 3, 2, 2, 2, 34, 32, 3, 2, 2, 2, 34, 35, 3, 2, 2,
+	2, 35, 38, 3, 2, 2, 2, 36, 34, 3, 2, 2, 2, 37, 39, 5, 6, 4, 2, 38, 37,
+	3, 2, 2, 2, 38, 39, 3, 2, 2, 2, 39, 43, 3, 2, 2, 2, 40, 42, 5, 8, 5, 2,
+	41, 40, 3, 2, 2, 2, 42, 45, 3, 2, 2, 2, 43, 41, 3, 2, 2, 2, 43, 44, 3,
+	2, 2, 2, 44, 49, 3, 2, 2, 2, 45, 43, 3, 2, 2, 2, 46, 48, 5, 14, 8, 2, 47,
+	46, 3, 2, 2, 2, 48, 51, 3, 2, 2, 2, 49, 47, 3, 2, 2, 2, 49, 50, 3, 2, 2,
+	2, 50, 3, 3, 2, 2, 2, 51, 49, 3, 2, 2, 2, 52, 53, 7, 16, 2, 2, 53, 56,
+	7, 25, 2, 2, 54, 55, 7, 17, 2, 2, 55, 57, 5, 26, 14, 2, 56, 54, 3, 2, 2,
+	2, 56, 57, 3, 2, 2, 2, 57, 5, 3, 2, 2, 2, 58, 59, 7, 19, 2, 2, 59, 60,
+	7, 25, 2, 2, 60, 7, 3, 2, 2, 2, 61, 62, 7, 20, 2, 2, 62, 68, 7, 25, 2,
+	2, 63, 65, 7, 17, 2, 2, 64, 66, 5, 10, 6, 2, 65, 64, 3, 2, 2, 2, 65, 66,
+	3, 2, 2, 2, 66, 67, 3, 2, 2, 2, 67, 69, 5, 26, 14, 2, 68, 63, 3, 2, 2,
+	2, 68, 69, 3, 2, 2, 2, 69, 70, 3, 2, 2, 2, 70, 71, 7, 21, 2, 2, 71, 74,
+	5, 28, 15, 2, 72, 73, 7, 18, 2, 2, 73, 75, 5, 26, 14, 2, 74, 72, 3, 2,
+	2, 2, 74, 75, 3, 2, 2, 2, 75, 9, 3, 2, 2, 2, 76, 77, 9, 2, 2, 2, 77, 11,
+	3, 2, 2, 2, 78, 79, 8, 7, 1, 2, 79, 85, 5, 16, 9, 2, 80, 81, 7, 7, 2, 2,
+	81, 82, 5, 12, 7, 2, 82, 83, 7, 8, 2, 2, 83, 85, 3, 2, 2, 2, 84, 78, 3,
+	2, 2, 2, 84, 80, 3, 2, 2, 2, 85, 94, 3, 2, 2, 2, 86, 87, 12, 6, 2, 2, 87,
+	88, 7, 5, 2, 2, 88, 93, 5, 12, 7, 7, 89, 90, 12, 5, 2, 2, 90, 91, 7, 6,
+	2, 2, 91, 93, 5, 12, 7, 6, 92, 86, 3, 2, 2, 2, 92, 89, 3, 2, 2, 2, 93,
+	96, 3, 2, 2, 2, 94, 92, 3, 2, 2, 2, 94, 95, 3, 2, 2, 2, 95, 13, 3, 2, 2,
+	2, 96, 94, 3, 2, 2, 2, 97, 98, 7, 22, 2, 2, 98, 99, 5, 12, 7, 2, 99, 100,
+	7, 18, 2, 2, 100, 101, 5, 26, 14, 2, 101, 15, 3, 2, 2, 2, 102, 103, 7,
+	9, 2, 2, 103, 109, 5, 26, 14, 2, 104, 105, 5, 26, 14, 2, 105, 106, 5, 18,
+	10, 2, 106, 107, 5, 20, 11, 2, 107, 109, 3, 2, 2, 2, 108, 102, 3, 2, 2,
+	2, 108, 104, 3, 2, 2, 2, 109, 17, 3, 2, 2, 2, 110, 111, 9, 3, 2, 2, 111,
+	19, 3, 2, 2, 2, 112, 116, 5, 26, 14, 2, 113, 116, 5, 22, 12, 2, 114, 116,
+	7, 27, 2, 2, 115, 112, 3, 2, 2, 2, 115, 113, 3, 2, 2, 2, 115, 114, 3, 2,
+	2, 2, 116, 21, 3, 2, 2, 2, 117, 118, 9, 4, 2, 2, 118, 23, 3, 2, 2, 2, 119,
+	120, 9, 5, 2, 2, 120, 25, 3, 2, 2, 2, 121, 124, 5, 24, 13, 2, 122, 124,
+	7, 24, 2, 2, 123, 121, 3, 2, 2, 2, 123, 122, 3, 2, 2, 2, 124, 27, 3, 2,
+	2, 2, 125, 128, 5, 26, 14, 2, 126, 128, 7, 23, 2, 2, 127, 125, 3, 2, 2,
+	2, 127, 126, 3, 2, 2, 2, 128, 29, 3, 2, 2, 2, 17, 34, 38, 43, 49, 56, 65,
+	68, 74, 84, 92, 94, 108, 115, 123, 127,
 }
 var literalNames = []string{
-	"", "'SAME'", "'DISTINCT'", "'AND'", "'OR'", "'@'", "'EQ'", "'NE'", "'GE'",
-	"'GT'", "'LT'", "'LE'", "'REP'", "'IN'", "'AS'", "'CBF'", "'SELECT'", "'FROM'",
-	"'FILTER'", "'*'", "", "", "'0'",
+	"", "'SAME'", "'DISTINCT'", "'AND'", "'OR'", "'('", "')'", "'@'", "'EQ'",
+	"'NE'", "'GE'", "'GT'", "'LT'", "'LE'", "'REP'", "'IN'", "'AS'", "'CBF'",
+	"'SELECT'", "'FROM'", "'FILTER'", "'*'", "", "", "'0'",
 }
 var symbolicNames = []string{
-	"", "", "", "", "", "", "", "", "", "", "", "", "REP", "IN", "AS", "CBF",
-	"SELECT", "FROM", "FILTER", "WILDCARD", "IDENT", "NUMBER1", "ZERO", "STRING",
-	"WS",
+	"", "", "", "", "", "", "", "", "", "", "", "", "", "", "REP", "IN", "AS",
+	"CBF", "SELECT", "FROM", "FILTER", "WILDCARD", "IDENT", "NUMBER1", "ZERO",
+	"STRING", "WS",
 }
 
 var ruleNames = []string{
@@ -128,19 +130,21 @@ const (
 	QueryParserT__8     = 9
 	QueryParserT__9     = 10
 	QueryParserT__10    = 11
-	QueryParserREP      = 12
-	QueryParserIN       = 13
-	QueryParserAS       = 14
-	QueryParserCBF      = 15
-	QueryParserSELECT   = 16
-	QueryParserFROM     = 17
-	QueryParserFILTER   = 18
-	QueryParserWILDCARD = 19
-	QueryParserIDENT    = 20
-	QueryParserNUMBER1  = 21
-	QueryParserZERO     = 22
-	QueryParserSTRING   = 23
-	QueryParserWS       = 24
+	QueryParserT__11    = 12
+	QueryParserT__12    = 13
+	QueryParserREP      = 14
+	QueryParserIN       = 15
+	QueryParserAS       = 16
+	QueryParserCBF      = 17
+	QueryParserSELECT   = 18
+	QueryParserFROM     = 19
+	QueryParserFILTER   = 20
+	QueryParserWILDCARD = 21
+	QueryParserIDENT    = 22
+	QueryParserNUMBER1  = 23
+	QueryParserZERO     = 24
+	QueryParserSTRING   = 25
+	QueryParserWS       = 26
 )
 
 // QueryParser rules.
@@ -1071,11 +1075,17 @@ type IFilterExprContext interface {
 	// GetF1 returns the F1 rule contexts.
 	GetF1() IFilterExprContext
 
+	// GetInner returns the Inner rule contexts.
+	GetInner() IFilterExprContext
+
 	// GetF2 returns the F2 rule contexts.
 	GetF2() IFilterExprContext
 
 	// SetF1 sets the F1 rule contexts.
 	SetF1(IFilterExprContext)
+
+	// SetInner sets the Inner rule contexts.
+	SetInner(IFilterExprContext)
 
 	// SetF2 sets the F2 rule contexts.
 	SetF2(IFilterExprContext)
@@ -1088,6 +1098,7 @@ type FilterExprContext struct {
 	*antlr.BaseParserRuleContext
 	parser antlr.Parser
 	F1     IFilterExprContext
+	Inner  IFilterExprContext
 	Op     antlr.Token
 	F2     IFilterExprContext
 }
@@ -1120,9 +1131,13 @@ func (s *FilterExprContext) SetOp(v antlr.Token) { s.Op = v }
 
 func (s *FilterExprContext) GetF1() IFilterExprContext { return s.F1 }
 
+func (s *FilterExprContext) GetInner() IFilterExprContext { return s.Inner }
+
 func (s *FilterExprContext) GetF2() IFilterExprContext { return s.F2 }
 
 func (s *FilterExprContext) SetF1(v IFilterExprContext) { s.F1 = v }
+
+func (s *FilterExprContext) SetInner(v IFilterExprContext) { s.Inner = v }
 
 func (s *FilterExprContext) SetF2(v IFilterExprContext) { s.F2 = v }
 
@@ -1221,15 +1236,40 @@ func (p *QueryParser) filterExpr(_p int) (localctx IFilterExprContext) {
 	var _alt int
 
 	p.EnterOuterAlt(localctx, 1)
-	{
-		p.SetState(77)
-		p.Expr()
-	}
-
-	p.GetParserRuleContext().SetStop(p.GetTokenStream().LT(-1))
-	p.SetState(87)
+	p.SetState(82)
 	p.GetErrorHandler().Sync(p)
-	_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 9, p.GetParserRuleContext())
+
+	switch p.GetTokenStream().LA(1) {
+	case QueryParserT__6, QueryParserREP, QueryParserIN, QueryParserAS, QueryParserSELECT, QueryParserFROM, QueryParserFILTER, QueryParserIDENT:
+		{
+			p.SetState(77)
+			p.Expr()
+		}
+
+	case QueryParserT__4:
+		{
+			p.SetState(78)
+			p.Match(QueryParserT__4)
+		}
+		{
+			p.SetState(79)
+
+			var _x = p.filterExpr(0)
+
+			localctx.(*FilterExprContext).Inner = _x
+		}
+		{
+			p.SetState(80)
+			p.Match(QueryParserT__5)
+		}
+
+	default:
+		panic(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+	}
+	p.GetParserRuleContext().SetStop(p.GetTokenStream().LT(-1))
+	p.SetState(92)
+	p.GetErrorHandler().Sync(p)
+	_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 10, p.GetParserRuleContext())
 
 	for _alt != 2 && _alt != antlr.ATNInvalidAltNumber {
 		if _alt == 1 {
@@ -1237,29 +1277,29 @@ func (p *QueryParser) filterExpr(_p int) (localctx IFilterExprContext) {
 				p.TriggerExitRuleEvent()
 			}
 			_prevctx = localctx
-			p.SetState(85)
+			p.SetState(90)
 			p.GetErrorHandler().Sync(p)
-			switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 8, p.GetParserRuleContext()) {
+			switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 9, p.GetParserRuleContext()) {
 			case 1:
 				localctx = NewFilterExprContext(p, _parentctx, _parentState)
 				localctx.(*FilterExprContext).F1 = _prevctx
 				p.PushNewRecursionContext(localctx, _startState, QueryParserRULE_filterExpr)
-				p.SetState(79)
+				p.SetState(84)
 
-				if !(p.Precpred(p.GetParserRuleContext(), 3)) {
-					panic(antlr.NewFailedPredicateException(p, "p.Precpred(p.GetParserRuleContext(), 3)", ""))
+				if !(p.Precpred(p.GetParserRuleContext(), 4)) {
+					panic(antlr.NewFailedPredicateException(p, "p.Precpred(p.GetParserRuleContext(), 4)", ""))
 				}
 				{
-					p.SetState(80)
+					p.SetState(85)
 
 					var _m = p.Match(QueryParserT__2)
 
 					localctx.(*FilterExprContext).Op = _m
 				}
 				{
-					p.SetState(81)
+					p.SetState(86)
 
-					var _x = p.filterExpr(4)
+					var _x = p.filterExpr(5)
 
 					localctx.(*FilterExprContext).F2 = _x
 				}
@@ -1268,22 +1308,22 @@ func (p *QueryParser) filterExpr(_p int) (localctx IFilterExprContext) {
 				localctx = NewFilterExprContext(p, _parentctx, _parentState)
 				localctx.(*FilterExprContext).F1 = _prevctx
 				p.PushNewRecursionContext(localctx, _startState, QueryParserRULE_filterExpr)
-				p.SetState(82)
+				p.SetState(87)
 
-				if !(p.Precpred(p.GetParserRuleContext(), 2)) {
-					panic(antlr.NewFailedPredicateException(p, "p.Precpred(p.GetParserRuleContext(), 2)", ""))
+				if !(p.Precpred(p.GetParserRuleContext(), 3)) {
+					panic(antlr.NewFailedPredicateException(p, "p.Precpred(p.GetParserRuleContext(), 3)", ""))
 				}
 				{
-					p.SetState(83)
+					p.SetState(88)
 
 					var _m = p.Match(QueryParserT__3)
 
 					localctx.(*FilterExprContext).Op = _m
 				}
 				{
-					p.SetState(84)
+					p.SetState(89)
 
-					var _x = p.filterExpr(3)
+					var _x = p.filterExpr(4)
 
 					localctx.(*FilterExprContext).F2 = _x
 				}
@@ -1291,9 +1331,9 @@ func (p *QueryParser) filterExpr(_p int) (localctx IFilterExprContext) {
 			}
 
 		}
-		p.SetState(89)
+		p.SetState(94)
 		p.GetErrorHandler().Sync(p)
-		_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 9, p.GetParserRuleContext())
+		_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 10, p.GetParserRuleContext())
 	}
 
 	return localctx
@@ -1439,22 +1479,22 @@ func (p *QueryParser) FilterStmt() (localctx IFilterStmtContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(90)
+		p.SetState(95)
 		p.Match(QueryParserFILTER)
 	}
 	{
-		p.SetState(91)
+		p.SetState(96)
 
 		var _x = p.filterExpr(0)
 
 		localctx.(*FilterStmtContext).Expr = _x
 	}
 	{
-		p.SetState(92)
+		p.SetState(97)
 		p.Match(QueryParserAS)
 	}
 	{
-		p.SetState(93)
+		p.SetState(98)
 
 		var _x = p.Ident()
 
@@ -1626,18 +1666,18 @@ func (p *QueryParser) Expr() (localctx IExprContext) {
 		}
 	}()
 
-	p.SetState(101)
+	p.SetState(106)
 	p.GetErrorHandler().Sync(p)
 
 	switch p.GetTokenStream().LA(1) {
-	case QueryParserT__4:
+	case QueryParserT__6:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(95)
-			p.Match(QueryParserT__4)
+			p.SetState(100)
+			p.Match(QueryParserT__6)
 		}
 		{
-			p.SetState(96)
+			p.SetState(101)
 
 			var _x = p.Ident()
 
@@ -1647,21 +1687,21 @@ func (p *QueryParser) Expr() (localctx IExprContext) {
 	case QueryParserREP, QueryParserIN, QueryParserAS, QueryParserSELECT, QueryParserFROM, QueryParserFILTER, QueryParserIDENT:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(97)
+			p.SetState(102)
 
 			var _x = p.Ident()
 
 			localctx.(*ExprContext).Key = _x
 		}
 		{
-			p.SetState(98)
+			p.SetState(103)
 
 			var _x = p.Operation()
 
 			localctx.(*ExprContext).Op = _x
 		}
 		{
-			p.SetState(99)
+			p.SetState(104)
 
 			var _x = p.IdentOrValue()
 
@@ -1765,10 +1805,10 @@ func (p *QueryParser) Operation() (localctx IOperationContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(103)
+		p.SetState(108)
 		_la = p.GetTokenStream().LA(1)
 
-		if !(((_la)&-(0x1f+1)) == 0 && ((1<<uint(_la))&((1<<QueryParserT__5)|(1<<QueryParserT__6)|(1<<QueryParserT__7)|(1<<QueryParserT__8)|(1<<QueryParserT__9)|(1<<QueryParserT__10))) != 0) {
+		if !(((_la)&-(0x1f+1)) == 0 && ((1<<uint(_la))&((1<<QueryParserT__7)|(1<<QueryParserT__8)|(1<<QueryParserT__9)|(1<<QueryParserT__10)|(1<<QueryParserT__11)|(1<<QueryParserT__12))) != 0) {
 			p.GetErrorHandler().RecoverInline(p)
 		} else {
 			p.GetErrorHandler().ReportMatch(p)
@@ -1902,28 +1942,28 @@ func (p *QueryParser) IdentOrValue() (localctx IIdentOrValueContext) {
 		}
 	}()
 
-	p.SetState(108)
+	p.SetState(113)
 	p.GetErrorHandler().Sync(p)
 
 	switch p.GetTokenStream().LA(1) {
 	case QueryParserREP, QueryParserIN, QueryParserAS, QueryParserSELECT, QueryParserFROM, QueryParserFILTER, QueryParserIDENT:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(105)
+			p.SetState(110)
 			p.Ident()
 		}
 
 	case QueryParserNUMBER1, QueryParserZERO:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(106)
+			p.SetState(111)
 			p.Number()
 		}
 
 	case QueryParserSTRING:
 		p.EnterOuterAlt(localctx, 3)
 		{
-			p.SetState(107)
+			p.SetState(112)
 
 			var _m = p.Match(QueryParserSTRING)
 
@@ -2036,7 +2076,7 @@ func (p *QueryParser) Number() (localctx INumberContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(110)
+		p.SetState(115)
 		_la = p.GetTokenStream().LA(1)
 
 		if !(_la == QueryParserNUMBER1 || _la == QueryParserZERO) {
@@ -2165,7 +2205,7 @@ func (p *QueryParser) Keyword() (localctx IKeywordContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(112)
+		p.SetState(117)
 		_la = p.GetTokenStream().LA(1)
 
 		if !(((_la)&-(0x1f+1)) == 0 && ((1<<uint(_la))&((1<<QueryParserREP)|(1<<QueryParserIN)|(1<<QueryParserAS)|(1<<QueryParserSELECT)|(1<<QueryParserFROM)|(1<<QueryParserFILTER))) != 0) {
@@ -2281,21 +2321,21 @@ func (p *QueryParser) Ident() (localctx IIdentContext) {
 		}
 	}()
 
-	p.SetState(116)
+	p.SetState(121)
 	p.GetErrorHandler().Sync(p)
 
 	switch p.GetTokenStream().LA(1) {
 	case QueryParserREP, QueryParserIN, QueryParserAS, QueryParserSELECT, QueryParserFROM, QueryParserFILTER:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(114)
+			p.SetState(119)
 			p.Keyword()
 		}
 
 	case QueryParserIDENT:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(115)
+			p.SetState(120)
 			p.Match(QueryParserIDENT)
 		}
 
@@ -2408,21 +2448,21 @@ func (p *QueryParser) IdentWC() (localctx IIdentWCContext) {
 		}
 	}()
 
-	p.SetState(120)
+	p.SetState(125)
 	p.GetErrorHandler().Sync(p)
 
 	switch p.GetTokenStream().LA(1) {
 	case QueryParserREP, QueryParserIN, QueryParserAS, QueryParserSELECT, QueryParserFROM, QueryParserFILTER, QueryParserIDENT:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(118)
+			p.SetState(123)
 			p.Ident()
 		}
 
 	case QueryParserWILDCARD:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(119)
+			p.SetState(124)
 			p.Match(QueryParserWILDCARD)
 		}
 
@@ -2450,10 +2490,10 @@ func (p *QueryParser) Sempred(localctx antlr.RuleContext, ruleIndex, predIndex i
 func (p *QueryParser) FilterExpr_Sempred(localctx antlr.RuleContext, predIndex int) bool {
 	switch predIndex {
 	case 0:
-		return p.Precpred(p.GetParserRuleContext(), 3)
+		return p.Precpred(p.GetParserRuleContext(), 4)
 
 	case 1:
-		return p.Precpred(p.GetParserRuleContext(), 2)
+		return p.Precpred(p.GetParserRuleContext(), 3)
 
 	default:
 		panic("No predicate with index: " + fmt.Sprint(predIndex))
