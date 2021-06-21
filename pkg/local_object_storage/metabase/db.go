@@ -6,10 +6,10 @@ import (
 	"os"
 	"strconv"
 
+	"github.com/cockroachdb/pebble"
 	"github.com/nspcc-dev/neofs-api-go/pkg/object"
 	v2object "github.com/nspcc-dev/neofs-api-go/v2/object"
 	"github.com/nspcc-dev/neofs-node/pkg/util/logger"
-	"go.etcd.io/bbolt"
 	"go.uber.org/zap"
 )
 
@@ -19,14 +19,14 @@ type DB struct {
 
 	matchers map[object.SearchMatchType]func(string, []byte, string) bool
 
-	boltDB *bbolt.DB
+	db *pebble.DB
 }
 
 // Option is an option of DB constructor.
 type Option func(*cfg)
 
 type cfg struct {
-	boltOptions *bbolt.Options // optional
+	dbOptions *pebble.Options // optional
 
 	info Info
 
@@ -37,6 +37,10 @@ func defaultCfg() *cfg {
 	return &cfg{
 		info: Info{
 			Permission: os.ModePerm, // 0777
+		},
+
+		dbOptions: &pebble.Options{
+			Merger: valueMerger,
 		},
 
 		log: zap.L(),
@@ -116,10 +120,14 @@ func WithLogger(l *logger.Logger) Option {
 	}
 }
 
-// WithBoltDBOptions returns option to specify BoltDB options.
-func WithBoltDBOptions(opts *bbolt.Options) Option {
+// WithDBOptions returns option to specify BoltDB options.
+func WithDBOptions(opts *pebble.Options) Option {
 	return func(c *cfg) {
-		c.boltOptions = opts
+		c.dbOptions = opts
+
+		// This is really an internal parameter which reflect db structure
+		// and it shouldn't be set outside.
+		c.dbOptions.Merger = valueMerger
 	}
 }
 
